@@ -1,0 +1,42 @@
+{
+  "input_idea": "I want to start a YouTube channel and earn money quickly",
+  "structured_plan": {
+    "goal": "Launch a niche YouTube channel and reach first monetization milestones.",
+    "method": "Pick a focused topic, publish consistently, optimize videos for search, and validate content with audience feedback.",
+    "steps": [
+      "Choose one niche and define target audience.",
+      "Create a 30-day content calendar with 8 video topics.",
+      "Set up channel branding, about section, and upload template.",
+      "Publish 2 videos weekly with clear titles and thumbnails.",
+      "Track watch time, CTR, and retention weekly and refine content."
+    ],
+    "timeline": "First 30 days for setup and initial publishing; 3 months for growth review."
+  },
+  "missing_elements": {
+    "goal_clarity": false,
+    "steps_missing": false,
+    "resources_missing": true,
+    "timeline_missing": false
+  },
+  "simplified_version": "Start a focused YouTube channel with a weekly publishing plan and data-based improvements to reach monetization goals.",
+  "action_steps": [
+    "Select one niche and list 3 audience pain points.",
+    "Research 20 competitor videos to identify content gaps.",
+    "Create 8 video outlines before publishing.",
+    "Produce and upload 2 videos per week for 4 weeks.",
+    "Use a thumbnail template for visual consistency.",
+    "Review analytics every Sunday and adjust next week topics.",
+    "Plan one collaboration or cross-promotion by week 4."
+  ],
+  "clarity_score": {
+    "score": 75,
+    "breakdown": {
+      "goal": 25,
+      "steps": 25,
+      "timeline": 25,
+      "completeness": 0
+    },
+    "reason": "Clarity score is 75/100. Goal defined: 25/25 | Steps present: 25/25 | Timeline present: 25/25 | Overall completeness: 0/25"
+  },
+  "generated_at": "2026-03-19T00:00:00.000Z"
+}
