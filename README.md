@@ -103,7 +103,7 @@ Future improvements include adding user authentication and plan history tracking
 
 ## Live Demo
 
-Live demo link: Coming soon
+Live demo link: https://client-4g34gpqvj-sricharans-projects-be5baa67.vercel.app/
 
 ## GitHub Repository
 
