@@ -80,11 +80,6 @@ Start frontend:
 npm run dev
 ```
 
-## AI Prompt Design
-
-The prompt design uses a strict structured format so the model returns predictable JSON output. The prompt defines the assistant role, the exact schema, and output rules, including practical constraints such as domain-relevant actions and avoiding generic advice.
-
-This structure improves consistency and reduces malformed responses. The backend also applies normalization and validation to ensure the final response is reliable for frontend rendering.
 
 ## Clarity Score Logic
 
