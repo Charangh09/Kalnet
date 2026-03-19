@@ -1,167 +1,124 @@
-# Explain My Plan — AI Clarity & Structuring Tool
-
-A full-stack web app that converts vague ideas into structured, practical plans using an LLM (Gemini), highlights missing elements, and scores plan clarity from 0–100.
+# Explain My Plan – AI Clarity and Structuring Tool
 
 ## Project Overview
 
-This project is built to help users turn unstructured natural-language ideas into actionable outputs:
-- Structured plan: goal, method, steps, timeline
-- Missing element detection
-- Simplified version of the input
-- Practical action steps
-- Transparent clarity score with reasoning
-- Re-analysis flow for iteration (before vs after score)
+Many people have useful ideas but struggle to turn them into clear, executable plans. Most plans start as vague thoughts without defined steps, timelines, or required resources. This project solves that problem by taking raw user input and converting it into a structured plan that is easier to understand and act on.
+
+Explain My Plan is a full-stack web application that accepts a natural language idea, analyzes it with an LLM, and returns a practical output that includes structure, gaps, action steps, and a clarity score. The goal is to help users move from intention to execution with better clarity.
+
+## Features
+
+The application analyzes free-form ideas and breaks them into a clear structure with goal, method, steps, and timeline. This gives users an immediate view of what they are trying to do and how they might do it.
+
+It also detects missing elements in the plan. Instead of only marking things as missing, the app highlights gaps in goal clarity, execution steps, resources, and timeline, then gives practical guidance for improvement.
+
+To improve readability, the app generates a simplified version of the original input. This helps users restate their idea in a clearer and more focused way.
+
+The output includes actionable next steps designed to be practical and implementation-oriented. These steps are intended to help users start execution quickly rather than stay in planning mode.
+
+A clarity score from 0 to 100 is included to make plan quality measurable. The score is explained with a transparent breakdown so users can see where they are strong and where they need improvement.
+
+The app supports iteration by allowing users to edit the original input and run analysis again. This helps users compare results and improve their plan quality over time.
 
 ## Tech Stack
 
-- **Frontend:** React + Vite
-- **Backend:** Node.js + Express (REST API)
-- **AI:** Gemini API (`@google/generative-ai`)
-- **Database (optional):** MongoDB via Mongoose
-
-## Folder Structure
-
-```txt
-kalnet_assignment/
-  client/
-    src/
-      components/
-      services/
-  server/
-    src/
-      config/
-      controllers/
-      models/
-      routes/
-      services/
-```
+The frontend is built with React and Tailwind CSS to provide a clean, responsive dashboard interface.
+The backend is built with Node.js and Express and exposes a REST endpoint for plan analysis.
+AI analysis is handled through Gemini API integration, with support for structured prompting and safe response parsing.
+MongoDB is optional and can be used for storing user input, analysis output, and timestamps.
 
 ## Setup Instructions
 
-### 1) Clone and install
+### Clone the repository
 
 ```bash
-# Server
-cd server
-npm install
+git clone https://github.com/Charangh09/Kalnet.git
+cd Kalnet
+```
 
-# Client
-cd ../client
+### Run the backend
+
+```bash
+cd server
 npm install
 ```
 
-### 2) Environment variables
-
-Create `server/.env` from `server/.env.example`:
+Create a `.env` file in the `server` folder based on `.env.example`, then set values like:
 
 ```env
 PORT=5000
 CLIENT_ORIGIN=http://localhost:5173
-GEMINI_API_KEY=your_gemini_api_key
-GEMINI_MODEL=gemini-1.5-flash
-MONGODB_URI=
+GEMINI_API_KEY=your_api_key
+GEMINI_MODEL=gemini-2.0-flash
+MONGODB_URI=your_mongodb_uri_optional
 ```
 
-Create `client/.env` from `client/.env.example`:
+Start backend:
+
+```bash
+npm run dev
+```
+
+### Run the frontend
+
+Open a new terminal:
+
+```bash
+cd client
+npm install
+```
+
+Create `.env` in `client` based on `.env.example`:
 
 ```env
 VITE_API_BASE_URL=http://localhost:5000
 ```
 
-### 3) Run locally
+Start frontend:
 
 ```bash
-# terminal 1
-cd server
-npm run dev
-
-# terminal 2
-cd client
 npm run dev
 ```
 
-Open `http://localhost:5173`.
+## AI Prompt Design
 
-## API
+The prompt design uses a strict structured format so the model returns predictable JSON output. The prompt defines the assistant role, the exact schema, and output rules, including practical constraints such as domain-relevant actions and avoiding generic advice.
 
-### POST `/analyze`
-
-**Input**
-
-```json
-{
-  "idea": "I want to start a YouTube channel and earn money quickly"
-}
-```
-
-**Response shape**
-
-```json
-{
-  "input_idea": "...",
-  "structured_plan": {
-    "goal": "",
-    "method": "",
-    "steps": [],
-    "timeline": ""
-  },
-  "missing_elements": {
-    "goal_clarity": true,
-    "steps_missing": true,
-    "resources_missing": true,
-    "timeline_missing": true
-  },
-  "simplified_version": "",
-  "action_steps": [],
-  "clarity_score": {
-    "score": 0,
-    "breakdown": {
-      "goal": 0,
-      "steps": 0,
-      "timeline": 0,
-      "completeness": 0
-    },
-    "reason": ""
-  },
-  "generated_at": "2026-03-19T00:00:00.000Z"
-}
-```
-
-## Prompt Design Explanation
-
-The backend uses a structured prompt in `server/src/services/promptService.js` with:
-- Role definition: expert planning assistant
-- Strict JSON schema constraints
-- Explicit rules:
-  - JSON-only response (no markdown)
-  - practical and concise outputs
-  - 5–8 action steps
-  - boolean missing-element flags
-
-This design reduces output drift and improves parse reliability.
+This structure improves consistency and reduces malformed responses. The backend also applies normalization and validation to ensure the final response is reliable for frontend rendering.
 
 ## Clarity Score Logic
 
-Scoring is transparent and deterministic in `server/src/services/planFormatter.js`:
+The clarity score is calculated out of 100 using four equal components. A clear goal contributes 25 points, defined steps contribute 25 points, timeline presence contributes 25 points, and overall completeness contributes 25 points. The final score is the total of these components, and the breakdown is shown to the user for transparency.
 
-- Goal defined and clear: **+25**
-- Steps present and not missing: **+25**
-- Timeline present and not missing: **+25**
-- Overall completeness: **+25**
+## Project Structure
 
-Total score = sum of all four components (0–100).
+The project is split into two main folders: `client` and `server`. The `client` folder contains the React application, reusable UI components, API integration logic, and styling. The `server` folder contains Express routes, controllers, AI service logic, formatting and scoring utilities, and optional MongoDB models/configuration.
 
-## Deployment Notes
+## Challenges Faced
 
-- **Frontend:** deploy `client` on Vercel (set `VITE_API_BASE_URL`)
-- **Backend:** deploy `server` on Render/Railway (set `.env` values)
-- Enable CORS with deployed frontend URL in `CLIENT_ORIGIN`.
+One major challenge was obtaining consistently structured output from the LLM, especially when user input was vague. Another challenge was reducing generic responses and making generated steps more practical and domain-aware. Designing a score that is simple, understandable, and still useful was also important, since the score needs to guide users without being confusing.
 
-## Optional MongoDB Persistence
+## Approach to AI Prompting
 
-If `MONGODB_URI` is provided, each analysis stores:
-- user input
-- AI output
-- timestamps
+The prompting approach was schema-first. The model is instructed to produce strict JSON only, with clearly defined keys and practical response rules. Prompt constraints were designed to encourage specificity, avoid abstract advice, and provide actionable suggestions tied to the user’s context. This was paired with backend-side parsing and fallback handling to keep responses stable.
 
-If not provided, app runs normally without persistence.
+## Future Improvements
+
+Future improvements include adding user authentication and plan history tracking, introducing export options such as PDF or share links, improving domain-specific templates for different use cases, and adding deeper analytics to visualize clarity improvements over multiple iterations.
+
+## Live Demo
+
+Live demo link: Coming soon
+
+## GitHub Repository
+
+https://github.com/Charangh09
+
+## Author
+
+Sri Charan Sirikonda
+B.E. Artificial Intelligence and Data Science
+
+## Conclusion
+
+This project demonstrates practical full-stack development, applied prompt engineering, and product-focused UX thinking. It shows how AI can be used not just to generate text, but to improve decision quality by converting unclear ideas into structured, actionable plans.
