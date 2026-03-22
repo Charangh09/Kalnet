@@ -108,20 +108,40 @@ const calculateCompletenessPoints = ({
   missing_elements,
   overall_completeness,
 }) => {
-  if (overall_completeness === "high") return 25;
-  if (overall_completeness === "medium") return 15;
-  if (overall_completeness === "low") return 5;
+  let points;
 
-  const checks = [
-    Boolean(goal),
-    Boolean(method),
-    steps.length >= 3,
-    Boolean(timeline),
-    missing_elements.resources_missing?.missing === false,
-  ];
+  if (overall_completeness === "high") points = 25;
+  else if (overall_completeness === "medium") points = 15;
+  else if (overall_completeness === "low") points = 5;
+  else {
+    const checks = [
+      Boolean(goal),
+      Boolean(method),
+      steps.length >= 3,
+      Boolean(timeline),
+      missing_elements.resources_missing?.missing === false,
+    ];
 
-  const passed = checks.filter(Boolean).length;
-  return Math.round((passed / checks.length) * 25);
+    const passed = checks.filter(Boolean).length;
+    points = Math.round((passed / checks.length) * 25);
+  }
+
+  // Missing elements should reduce completeness even if model marks overall as high.
+  const missingCount = Object.values(missing_elements || {}).filter(
+    (item) => item?.missing,
+  ).length;
+
+  if (missingCount >= 2) {
+    points = Math.min(points, 5);
+  } else if (missingCount === 1) {
+    points = Math.min(points, 20);
+  }
+
+  if (missing_elements?.resources_missing?.missing) {
+    points = Math.min(points, 10);
+  }
+
+  return Math.max(0, points);
 };
 
 const buildScoreReason = (scoreBreakdown, total) => {
